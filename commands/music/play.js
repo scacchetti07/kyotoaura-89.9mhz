@@ -1,8 +1,6 @@
-const {
-  SlashCommandBuilder,
-  PermissionsBitField,
-  EmbedBuilder,
-} = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+
+const { checkVoicePresence } = require("../../helpers/checkVoicePresence.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -22,40 +20,52 @@ module.exports = {
 
     // Variáveis de identificação
     const memberVoiceChannel = interaction.member.voice.channel;
-    const me = interaction.guild.members.me;
-    const currentVoiceChannel = interaction.guild.members.me.voice.channel;
+    // const me = interaction.guild.members.me;
+    // const currentVoiceChannel = interaction.guild.members.me.voice.channel;
 
-    // Caso o usuário não esteja em um canal de voz
-    if (!memberVoiceChannel) {
-      return await interaction.reply(
-        "Você precisa estar em uma call para tocar alguma música",
-      );
-    }
+    // // Caso o usuário não esteja em um canal de voz
+    // if (!memberVoiceChannel) {
+    //   return await interaction.reply(
+    //     "Você precisa estar em uma call para tocar alguma música",
+    //   );
+    // }
 
-    // Verifica se o bot tem a permissão para acessar o canal de voz
-    if (
-      !memberVoiceChannel
-        .permissionsFor(me)
-        .has(PermissionsBitField.Flags.Connect)
-    ) {
-      return await interaction.reply(
-        "Não tenho permissão para conectar na call",
-      );
-    }
+    // // Verifica se o bot tem a permissão para acessar o canal de voz
+    // if (
+    //   !memberVoiceChannel
+    //     .permissionsFor(me)
+    //     .has(PermissionsBitField.Flags.Connect)
+    // ) {
+    //   return await interaction.reply(
+    //     "Não tenho permissão para conectar na call",
+    //   );
+    // }
 
-    if (
-      !memberVoiceChannel
-        .permissionsFor(me)
-        .has(PermissionsBitField.Flags.Speak)
-    ) {
-      return await interaction.reply("Não tenho permissão para falar na call!");
-    }
+    // if (
+    //   !memberVoiceChannel
+    //     .permissionsFor(me)
+    //     .has(PermissionsBitField.Flags.Speak)
+    // ) {
+    //   return await interaction.reply("Não tenho permissão para falar na call!");
+    // }
 
-    // Verifica se ele mesmo já está em algum canal de voz
-    if (currentVoiceChannel && currentVoiceChannel !== memberVoiceChannel) {
-      return await interaction.reply(
-        "Já estou em uma call atualmente. Aguarde!",
-      );
+    // // Verifica se ele mesmo já está em algum canal de voz
+    // if (currentVoiceChannel && currentVoiceChannel !== memberVoiceChannel) {
+    //   return await interaction.reply(
+    //     "Já estou em uma call atualmente. Aguarde!",
+    //   );
+    // }
+
+    const errorVoiceObj = checkVoicePresence(interaction);
+    if (errorVoiceObj.error) {
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Um erro ocorreu")
+            .setDescription(errorVoiceObj.msg),
+        ],
+      });
     }
 
     // Defer a resposta para evitar timeout
