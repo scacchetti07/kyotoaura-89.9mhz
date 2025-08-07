@@ -1,4 +1,5 @@
 const { EmbedBuilder, SlashCommandBuilder } = require("discord.js");
+const { checkPresence } = require("../../helpers/checkPresence.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -7,23 +8,16 @@ module.exports = {
   async execute(interaction) {
     const distube = interaction.client.distube;
 
-    // Variáveis de identificação
-    const memberVoiceChannel = interaction.member.voice.channel;
-    const me = interaction.guild.members.me;
-    const currentVoiceChannel = interaction.guild.members.me.voice.channel;
-
-    // Caso o usuário não esteja em um canal de voz
-    if (!memberVoiceChannel) {
-      return await interaction.reply(
-        "Você precisa estar em uma call para tocar alguma música",
-      );
-    }
-
-    // Verifica se ele mesmo já está em algum canal de voz
-    if (currentVoiceChannel && currentVoiceChannel !== memberVoiceChannel) {
-      return await interaction.reply(
-        "Já estou em uma call atualmente. Aguarde!",
-      );
+    const errorObj = checkPresence(interaction);
+    if (errorObj.error) {
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Um erro ocorreu")
+            .setDescription(errorObj.msg),
+        ],
+      });
     }
 
     try {
@@ -33,8 +27,13 @@ module.exports = {
           new EmbedBuilder()
             .setColor("DarkPurple")
             .setDescription(
-              `Tocando a música [${newSong.name}](${newSong.url})`,
-            ),
+              `Pulando para a música [${newSong.name}](${newSong.url})`,
+            )
+            .setFooter({
+              text: `${interaction.member.user.username}`,
+              iconURL: `${interaction.member.user.avatarURL()}`,
+            })
+            .setTimestamp(),
         ],
       });
     } catch (error) {
@@ -42,7 +41,7 @@ module.exports = {
       interaction.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor("Blurple")
+            .setColor("Red")
             .setTitle("Erro")
             .setDescription(`Não foi possível pular a música atual.`),
         ],

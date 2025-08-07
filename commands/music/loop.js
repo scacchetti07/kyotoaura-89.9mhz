@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { RepeatMode } = require("distube");
+const { checkPresence } = require("../../helpers/checkPresence.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,6 +22,18 @@ module.exports = {
   async execute(interaction) {
     const distube = interaction.client.distube;
     const subcommands = interaction.options.getSubcommand();
+
+    const errorObj = checkPresence(interaction);
+    if (errorObj.error) {
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("Red")
+            .setTitle("Um erro ocorreu")
+            .setDescription(errorObj.msg),
+        ],
+      });
+    }
 
     let status = "";
     let embed;
