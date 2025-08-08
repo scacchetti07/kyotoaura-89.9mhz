@@ -4,7 +4,7 @@ module.exports = {
   name: "playSong",
   async execute(queue, song) {
     const embed = new EmbedBuilder()
-      .setColor("DarkPurple")
+      .setColor("Blue")
       .setTitle("🎵 Tocando agora")
       .setDescription(`[${song.name}](${song.url})`)
       .addFields(
@@ -12,6 +12,11 @@ module.exports = {
         {
           name: "Pedido por:",
           value: `<@${song.user?.id ?? "Desconhecido"}>`,
+          inline: true,
+        },
+        {
+          name: "Plataforma:",
+          value: song.source,
           inline: true,
         },
       )

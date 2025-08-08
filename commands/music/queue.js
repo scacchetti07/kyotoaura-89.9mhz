@@ -1,36 +1,29 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { RepeatMode } = require("distube");
 const { checkPresence } = require("../../helpers/checkPresence.js");
+const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("queue")
-    .setDescription("Encerre o player de música"),
+    .setDescription("Veja quais músicas estão na fila"),
   async execute(interaction) {
     const distube = interaction.client.distube;
 
     const errorObj = checkPresence(interaction);
     if (errorObj.error) {
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Red")
-            .setTitle("Um erro ocorreu")
-            .setDescription(errorObj.msg),
-        ],
-      });
+      return errorEmbed(interaction, errorObj.msg);
     }
     // Defer a resposta para evitar timeout
     await interaction.deferReply();
-
     const queue = await distube.getQueue(interaction.guild.id);
     if (!queue) return;
     const song = queue.songs[0];
     return await interaction.editReply({
       embeds: [
         new EmbedBuilder()
-          .setColor("Blurple")
-          .setTitle("Fila Atual")
+          .setColor("Purple")
+          .setTitle(`Fila em ${interaction.guild.name}`)
           .setDescription(
             [
               `**Tocando agora:** \n[${song.name}](${song.url}) - \`${queue.formattedCurrentTime}\`/\`${
@@ -45,31 +38,30 @@ module.exports = {
                     (song, i) =>
                       `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
                   )
-                  .join("\n") || "Nenhuma música"
+                  .join("\n") || "Fila vazia"
               }`,
             ].join("\n"),
           )
           .addFields(
             {
-              name: "Autoplay",
-              value: `${queue.autoplay ? "On" : "Off"}`,
-              inline: true,
-            },
-            {
-              name: "Loop:",
+              name: "Looping:",
               value: `${
                 queue.repeatMode === RepeatMode.QUEUE
-                  ? "✅📋"
+                  ? "Fila"
                   : queue.repeatMode === RepeatMode.SONG
-                    ? "✅🎵"
+                    ? "Música"
                     : "Desligado"
               }`,
               inline: true,
             },
             {
-              name: "Filtros",
-              value: `${queue.filters.names.join(", ") || "Desligado"}`,
-              inline: false,
+              name: "Total de músicas na fila",
+              value: `${queue.songs.length}`,
+              inline: true,
+            },
+            {
+              name: "Pausado",
+              value: `${queue.isPaused() ? "Sim" : "Não"}`,
             },
           )
           .setThumbnail(song.thumbnail),

@@ -4,10 +4,10 @@ module.exports = {
   name: "finish",
   async execute(queue) {
     const embed = new EmbedBuilder()
-      .setColor("Purple")
+      .setColor("Blue")
       .setTitle("Playlist Vazia")
       .setDescription(
-        "Não tenho mais músicas para tocar :(\nAdicione algume usando \`/play\`",
+        "Não tenho mais músicas na fila 😥\nAdicione algumas usando \`/play\`",
       );
 
     queue.textChannel.send({ embeds: [embed] }).catch(console.error);

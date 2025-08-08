@@ -4,19 +4,23 @@ module.exports = {
   name: "addSong",
   async execute(queue, song) {
     const embed = new EmbedBuilder()
-      .setColor("Blurple")
-      .setTitle(`Adicionado a ${queue.songs.length}° posição`)
-      .setDescription(`[${song.name}](${song.url})`)
+      .setColor("Blue")
+      .setTitle(`Música adicionada`)
+      .setDescription(`Música:\n[${song.name}](${song.url})`)
       .addFields(
         { name: "Duração: ", value: song.formattedDuration, inline: true },
         {
-          name: "Pedido Por",
-          value: `<@${song.user?.id ?? "Desconhecido"}>`,
+          name: "Plataforma:",
+          value: song.source,
+          inline: true,
+        },
+        {
+          name: "Posição na Fila",
+          value: `${queue.songs.findIndex((sg) => sg.name === song.name) + 1}°`,
           inline: true,
         },
       )
-      .setThumbnail(song.thumbnail)
-      .setTimestamp();
+      .setThumbnail(song.thumbnail);
 
     queue.textChannel.send({ embeds: [embed] }).catch(console.error);
   },

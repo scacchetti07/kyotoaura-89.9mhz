@@ -5,6 +5,8 @@ const {
 } = require("discord.js");
 const { RepeatMode } = require("distube");
 const { checkPresence } = require("../../helpers/checkPresence.js");
+const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("np")
@@ -14,14 +16,7 @@ module.exports = {
 
     const errorObj = checkPresence(interaction);
     if (errorObj.error) {
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Red")
-            .setTitle("Um erro ocorreu")
-            .setDescription(errorObj.msg),
-        ],
-      });
+      return errorEmbed(interaction, errorObj.msg);
     }
 
     // Defer a resposta para evitar timeout
@@ -33,27 +28,28 @@ module.exports = {
       embeds: [
         new EmbedBuilder()
           .setColor("Purple")
-          .setAuthor({
-            name: "KyotoAura 89.9mhz",
-            iconURL: "https://i.imgur.com/sHInGV5.jpeg",
-          })
           .setTitle(`Tocando Agora`)
           .setDescription(
-            `\`${currSong.name}\`\n\nPróxima a tocar:  \'${queue.songs[1]}\'`,
+            `[${currSong.name}](${currSong.url})\n\nPróxima a tocar:  \'${queue?.songs[1] ?? "Nenhuma"}\'`,
           )
           .addFields(
             {
               name: "Tempo Atual",
-              value: `${queue.formattedCurrentTime} ▶️ ────────────────────── | ${currSong.formattedDuration}`,
+              value: `${queue.formattedCurrentTime}`,
               inline: true,
             },
             {
-              name: "Loop:",
+              name: "Duração",
+              value: `${currSong.formattedDuration}`,
+              inline: true,
+            },
+            {
+              name: "Looping:",
               value: `${
                 queue.repeatMode === RepeatMode.QUEUE
-                  ? "✅📋"
+                  ? "Fila"
                   : queue.repeatMode === RepeatMode.SONG
-                    ? "✅🎵"
+                    ? "Música"
                     : "Desligado"
               }`,
               inline: true,

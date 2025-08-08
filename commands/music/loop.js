@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { RepeatMode } = require("distube");
 const { checkPresence } = require("../../helpers/checkPresence.js");
+const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,14 +26,7 @@ module.exports = {
 
     const errorObj = checkPresence(interaction);
     if (errorObj.error) {
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Red")
-            .setTitle("Um erro ocorreu")
-            .setDescription(errorObj.msg),
-        ],
-      });
+      return errorEmbed(interaction, errorObj.msg);
     }
 
     let status = "";
@@ -42,40 +36,30 @@ module.exports = {
       switch (subcommands) {
         case "musica":
           distube.setRepeatMode(interaction, 1);
-          status = "música favorita";
+          status = "MÚSICAS";
           break;
         case "fila":
           distube.setRepeatMode(interaction, 2);
-          status = "fila";
+          status = "FILA";
           break;
         case "desligado":
           distube.setRepeatMode(interaction, 0);
           status = "0";
           embed = new EmbedBuilder()
             .setColor("Red")
-            .setTitle("❌ O looping atual foi desligado")
-            .setFooter({
-              text: `${interaction.member.user.username}`,
-              iconURL: `${interaction.member.user.avatarURL()}`,
-            });
+            .setDescription("❌ O looping foi desligado");
       }
 
       if (status !== "0") {
         embed = new EmbedBuilder()
           .setColor("Purple")
-          .setDescription(`O looping foi setado para a sua ${status}`)
-          .setFooter({
-            text: `${interaction.member.user.username}`,
-            iconURL: `${interaction.member.user.avatarURL()}`,
-          });
+          .setDescription(`Looping ligado para **${status}**`);
       }
 
       interaction.reply({ embeds: [embed] });
     } catch (error) {
       console.error(error);
-      interaction.reply({
-        embeds: [new EmbedBuilder().setColor("Red").setDescription(`ERRO`)],
-      });
+      return errorEmbed(interaction);
     }
   },
 };

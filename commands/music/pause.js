@@ -22,7 +22,7 @@ module.exports = {
       return interaction.reply({
         embeds: [
           new EmbedBuilder()
-            .setColor("Blue")
+            .setColor("Purple")
             .setTitle("Já Pausado")
             .setDescription("A música atual já está pausada! use \`/resume\`"),
         ],
@@ -35,7 +35,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setColor("Green")
-            .setTitle("⏸️ Pausado")
+            .setTitle("Pausado ⏸️")
             .setDescription(
               `A música [${song.name}](${song.url}) foi pausada em \`${currQueue.formattedCurrentTime}\``,
             ),

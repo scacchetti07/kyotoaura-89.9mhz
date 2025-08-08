@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 const { checkVoicePresence } = require("../../helpers/checkVoicePresence.js");
+const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,14 +24,7 @@ module.exports = {
 
     const errorVoiceObj = checkVoicePresence(interaction);
     if (errorVoiceObj.error) {
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Red")
-            .setTitle("Um erro ocorreu")
-            .setDescription(errorVoiceObj.msg),
-        ],
-      });
+      return errorEmbed(interaction, errorVoiceObj.msg);
     }
 
     // Defer a resposta para evitar timeout
@@ -50,14 +44,7 @@ module.exports = {
       });
     } catch (err) {
       console.error(err);
-      return interaction.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Red")
-            .setTitle("Erro ao tocar a música")
-            .setDescription(`A música solicitada não foi encontrada.`),
-        ],
-      });
+      return errorEmbed(interaction, "A música solicitada não foi encontrada.");
     }
   },
 };
