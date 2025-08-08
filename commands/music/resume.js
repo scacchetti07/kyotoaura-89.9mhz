@@ -1,12 +1,11 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { checkPresence } = require("../../helpers/checkPresence.js");
 const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
+const { checkPresence } = require("../../helpers/checkPresence.js");
 
-// Ideia: Adicionar o Resume aqui no Pause como subcomando e indicado a partir de um Check e um CrossMark
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("pause")
-    .setDescription("Pausa a música em execução no momento"),
+    .setName("resume")
+    .setDescription("Coloque a música atual para tocar novamente!"),
   async execute(interaction) {
     const distube = interaction.client.distube;
     const currQueue = distube.getQueue(interaction);
@@ -18,26 +17,25 @@ module.exports = {
 
     if (currQueue.length == 0)
       return errorEmbed(interaction, "A fila se encontra vazia no momento");
-    if (currQueue.isPaused())
+    if (!currQueue.isPaused())
       return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setColor("Blue")
-            .setTitle("Já Pausado")
-            .setDescription("A música atual já está pausada! use \`/resume\`"),
+            .setTitle("Em andamento")
+            .setDescription("A música atual já está em andamento!"),
         ],
       });
 
     try {
-      await distube.pause(interaction);
-      const song = currQueue.songs[0];
+      await distube.resume(interaction);
       return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setColor("Green")
-            .setTitle("⏸️ Pausado")
+            .setTitle("⏯️ Retomado")
             .setDescription(
-              `A música [${song.name}](${song.url}) foi pausada em \`${currQueue.formattedCurrentTime}\``,
+              `A música [${currQueue.songs[0].name}](${currQueue.songs[0].url}) voltou a tocar!!`,
             ),
         ],
       });
