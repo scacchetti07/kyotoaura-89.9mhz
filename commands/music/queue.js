@@ -56,7 +56,7 @@ module.exports = {
             },
             {
               name: "Total de músicas na fila",
-              value: `${queue.songs.length}`,
+              value: `${queue.songs.length - 1}`,
               inline: true,
             },
             {
