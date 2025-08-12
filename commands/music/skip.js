@@ -15,9 +15,10 @@ module.exports = {
     ),
   async execute(interaction) {
     const distube = interaction.client.distube;
+
     const errorObj = checkPresence(interaction);
     if (errorObj.error) {
-      return errorEmbed(errorObj.msg);
+      return errorEmbed(interaction, errorObj.msg);
     }
 
     try {
