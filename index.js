@@ -9,7 +9,7 @@ const {
   Collection,
 } = require("discord.js");
 const { token, prefix } = require("./config.json");
-const { DisTube, Queue } = require("distube");
+const { DisTube } = require("distube");
 const { YouTubePlugin } = require("@distube/youtube");
 const { SoundCloudPlugin } = require("@distube/soundcloud");
 const { SpotifyPlugin } = require("@distube/spotify");

@@ -39,16 +39,14 @@ const rest = new REST().setToken(token);
     // Deploy commands to a specific guild for faster testing (appears instantly)
     // Use Routes.applicationGuildCommands for guild-specific commands
     // Use Routes.applicationCommands for global commands (takes up to 1 hour)
-    const data = await rest.put(
-      Routes.applicationGuildCommands(clientId, guildId),
-      {
+    // let data = "";
+    guildId.forEach(async (id) => {
+      await rest.put(Routes.applicationGuildCommands(clientId, id), {
         body: commands,
-      },
-    );
+      });
+    });
 
-    console.log(
-      `Atualizado com Sucesso os ${data.length} slash commands (/) na guild.`,
-    );
+    console.log(`Atualizado com Sucesso os slash commands (/) no server.`);
   } catch (error) {
     // And of course, make sure you catch and log any errors!
     console.error(error);
