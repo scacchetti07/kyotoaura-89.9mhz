@@ -6,8 +6,10 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
-const { ActionRow } = require("discord.js");
 const { ActionRowBuilder } = require("@discordjs/builders");
+const {
+  createStartMessage,
+} = require("../../helpers/starterChannelMessage.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -36,19 +38,21 @@ module.exports = {
     }
 
     try {
+      
+      const redirectButton = new ButtonBuilder()
+      .setCustomId("kyoto-channel")
+      .setLabel("Acesse o chat ❌")
+      .setStyle(ButtonStyle.Primary);
+      
+      const actionRow = new ActionRowBuilder().addComponents(redirectButton);
+      
       guild.channels.create({
         name: "🎸 kyoto-songs",
         type: ChannelType.GuildText,
         topic: "Área exclusiva para tocar as suas músicas ",
       });
 
-      const redirectButton = new ButtonBuilder()
-        .setCustomId("kyoto-channel")
-        .setLabel("Acesse o chat")
-        .setStyle(ButtonStyle.Primary);
-
-      const actionRow = new ActionRowBuilder().addComponents(redirectButton);
-
+      const msg = createStartMessage(interaction);
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
