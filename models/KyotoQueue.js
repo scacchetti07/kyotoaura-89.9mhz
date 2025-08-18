@@ -1,6 +1,8 @@
 const { KyotoAura } = require("./KyotoAura.js");
+// const { kyotoArea } = require("../config.json")
 
 class KyotoQueue extends KyotoAura {
+ // static kyotoAreaID = kyotoArea;
   #kyotoQueue;
   defaultImg = "https://i.imgur.com/ukQH1Bd.jpeg";
 
@@ -14,7 +16,7 @@ class KyotoQueue extends KyotoAura {
   constructor(interaction) {
     super(interaction);
     this.setQueue(this.getDistube().getQueue(this.getGuildId()));
-    console.log(this.#kyotoQueue) // undefined = no queue
+   // console.log(this.#kyotoQueue) // undefined = no queue
   }
 
   queueStatus() {

@@ -7,7 +7,7 @@ import {
 import { KyotoQueue } from "../models/KyotoQueue.js";
 import { errorEmbed } from "./errorEmbedMessage.js";
 
-export function createStartMessage(interaction) {
+export function createStartMessage(interaction, channel) {
   const playpauseButton = new ButtonBuilder()
     .setCustomId("playpause-button")
     .setStyle(ButtonStyle.Secondary)
@@ -67,7 +67,7 @@ export function createStartMessage(interaction) {
           )
           .setImage(kyoto.currentPhotoSong());
       
-    return [embed, player];
+    channel.send({ embeds: [ embed ], components: [ player ]})
     
   } catch (error) {
     console.error(error);

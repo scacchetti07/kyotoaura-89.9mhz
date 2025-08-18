@@ -10,6 +10,8 @@ const { ActionRowBuilder } = require("@discordjs/builders");
 const {
   createStartMessage,
 } = require("../../helpers/starterChannelMessage.js");
+const { KyotoQueue } = require("../../models/KyotoQueue.js");
+const fs = require('node:fs') 
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -18,13 +20,14 @@ module.exports = {
   async execute(interaction) {
     const guild = interaction.guild;
 
-    // Fazer verificação para ser com ID
-    const alreadyExist = await guild.channels
+    // Fazer por IDs e armazenar no json como se fosse array para lembrar dos canais
+    const channel = await guild.channels
       .fetch()
       .then((channels) =>
-        channels.some((c) => c.name.includes("🎸-kyoto-songs")),
+        channels.find((c) => c.name === "🎸-kyoto-songs"),
       );
-    if (alreadyExist) {
+      
+    if (channel) {
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
@@ -41,18 +44,18 @@ module.exports = {
       
       const redirectButton = new ButtonBuilder()
       .setCustomId("kyoto-channel")
-      .setLabel("Acesse o chat ❌")
+      .setLabel("Acesse o chat")
       .setStyle(ButtonStyle.Primary);
       
       const actionRow = new ActionRowBuilder().addComponents(redirectButton);
       
-      guild.channels.create({
+      const area = await guild.channels.create({
         name: "🎸 kyoto-songs",
         type: ChannelType.GuildText,
         topic: "Área exclusiva para tocar as suas músicas ",
       });
 
-      const msg = createStartMessage(interaction);
+      createStartMessage(interaction, area);
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
