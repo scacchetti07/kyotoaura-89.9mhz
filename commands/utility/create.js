@@ -11,7 +11,7 @@ const {
   createStartMessage,
 } = require("../../helpers/starterChannelMessage.js");
 const { KyotoQueue } = require("../../models/KyotoQueue.js");
-const fs = require('node:fs') 
+const { writingJson } = require("../../helpers/writingOnJson.js")
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -27,7 +27,7 @@ module.exports = {
         channels.find((c) => c.name === "🎸-kyoto-songs"),
       );
       
-    if (channel) {
+    if (channel || KyotoQueue.kyotoAreaID) {
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
@@ -55,6 +55,10 @@ module.exports = {
         topic: "Área exclusiva para tocar as suas músicas ",
       });
 
+      KyotoQueue.kyotoAreaID = area.id;
+      const idkyoto = { kyotoarea: KyotoQueue.kyotoAreaID };
+      
+      writingJson(idkyoto);
       createStartMessage(interaction, area);
       return await interaction.reply({
         embeds: [

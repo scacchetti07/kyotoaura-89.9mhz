@@ -2,7 +2,7 @@ const { KyotoAura } = require("./KyotoAura.js");
 // const { kyotoArea } = require("../config.json")
 
 class KyotoQueue extends KyotoAura {
- // static kyotoAreaID = kyotoArea;
+  static kyotoAreaID;
   #kyotoQueue;
   defaultImg = "https://i.imgur.com/ukQH1Bd.jpeg";
 
