@@ -20,7 +20,7 @@ module.exports = {
       return errorEmbed(interaction, "A fila se encontra vazia no momento");
 
     try {
-      if (currQueue.isPlaying()) {
+      if (!currQueue.isPaused()) {
         console.log("Pausando");
         await distube.pause(interaction);
         return;

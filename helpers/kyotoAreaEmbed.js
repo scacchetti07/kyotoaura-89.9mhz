@@ -1,6 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 
-async function kyotoEmbed(kyoto) {
+function kyotoEmbed(kyoto) {
   return new EmbedBuilder()
     .setColor("Purple")
     .setTitle(kyoto.queueStatus())

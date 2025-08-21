@@ -11,7 +11,7 @@ const {
   createStartMessage,
 } = require("../../helpers/starterChannelMessage.js");
 const { KyotoQueue } = require("../../models/KyotoQueue.js");
-const { writingJson } = require("../../helpers/writingOnJson.js")
+const { writingJson } = require("../../helpers/writingOnJson.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,10 +23,8 @@ module.exports = {
     // Fazer por IDs e armazenar no json como se fosse array para lembrar dos canais
     const channel = await guild.channels
       .fetch()
-      .then((channels) =>
-        channels.find((c) => c.name === "🎸-kyoto-songs"),
-      );
-      
+      .then((channels) => channels.find((c) => c.name === "🎸-kyoto-songs"));
+
     if (channel || KyotoQueue.kyotoAreaID) {
       return await interaction.reply({
         embeds: [
@@ -41,14 +39,13 @@ module.exports = {
     }
 
     try {
-      
       const redirectButton = new ButtonBuilder()
-      .setCustomId("kyoto-channel")
-      .setLabel("Acesse o chat")
-      .setStyle(ButtonStyle.Primary);
-      
+        .setCustomId("kyoto-channel")
+        .setLabel("Acesse o chat")
+        .setStyle(ButtonStyle.Primary);
+
       const actionRow = new ActionRowBuilder().addComponents(redirectButton);
-      
+
       const area = await guild.channels.create({
         name: "🎸 kyoto-songs",
         type: ChannelType.GuildText,
@@ -57,8 +54,8 @@ module.exports = {
 
       KyotoQueue.kyotoAreaID = area.id;
       const idkyoto = { kyotoarea: KyotoQueue.kyotoAreaID };
-      
-      writingJson(idkyoto);
+
+      // writingJson(idkyoto);
       createStartMessage(interaction, area);
       return await interaction.reply({
         embeds: [

@@ -15,6 +15,13 @@ module.exports = {
     }
 
     try {
+      if (interaction.channel.name === "🎸-kyoto-songs") {
+        await interaction.reply({
+          content: "Comandos Slash (/) não são executados nesse chat.",
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
       await command.execute(interaction);
     } catch (error) {
       console.error(error);
@@ -25,7 +32,7 @@ module.exports = {
         });
       } else {
         await interaction.reply({
-          content: "Ocorreu um erro enquanto este comando era executado!",
+          content: "Ocorreu um erro enquanto este comando era executado! 2",
           flags: MessageFlags.Ephemeral,
         });
       }
