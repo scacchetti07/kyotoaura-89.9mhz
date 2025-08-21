@@ -16,24 +16,18 @@ module.exports = {
       return errorEmbed(interaction, errorObj.msg);
     }
 
-    if (currQueue.length == 0)
+    if (currQueue.songs.length == 0)
       return errorEmbed(interaction, "A fila se encontra vazia no momento");
-    if (!currQueue.isPaused())
-      return interaction.reply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor("Blue")
-            .setTitle("Em andamento")
-            .setDescription("A música atual já está em andamento!"),
-        ],
-      });
 
     try {
       if (currQueue.isPlaying()) {
-        await distube.resume(interaction);
+        console.log("Pausando");
+        await distube.pause(interaction);
         return;
       }
-      await distube.pause(interaction);
+      console.log("voltando");
+      await distube.resume(interaction);
+      return;
     } catch (error) {
       console.error(error);
       errorEmbed(interaction);

@@ -1,6 +1,6 @@
-import { EmbedBuilder } from "discord.js";
+const { EmbedBuilder } = require("discord.js");
 
-export function kyotoEmbed(kyoto) {
+async function kyotoEmbed(kyoto) {
   return new EmbedBuilder()
     .setColor("Purple")
     .setTitle(kyoto.queueStatus())
@@ -24,3 +24,5 @@ export function kyotoEmbed(kyoto) {
     )
     .setImage(kyoto.currentPhotoSong());
 }
+
+module.exports = { kyotoEmbed };
