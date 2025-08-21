@@ -1,6 +1,7 @@
-const { Events, EmbedBuilder } = require("discord.js");
+const { Events, EmbedBuilder, MessageFlags } = require("discord.js");
 const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
 const { checkPresence } = require("../../helpers/checkPresence.js");
+const { errorFollowUp } = require("../../helpers/errorFolowUp.js");
 
 module.exports = {
   name: Events.InteractionCreate,
@@ -13,11 +14,12 @@ module.exports = {
     const errorObj = checkPresence(interaction);
 
     if (errorObj.error) {
-      return errorEmbed(interaction, errorObj.msg);
+      return await errorFollowUp(interaction, errorObj.msg);
     }
 
-    if (currQueue.songs.length == 0)
-      return errorEmbed(interaction, "A fila se encontra vazia no momento");
+    if (!currQueue) {
+      return await errorFollowUp(interaction, "A fila está vazia no momento.");
+    }
 
     try {
       if (!currQueue.isPaused()) {
