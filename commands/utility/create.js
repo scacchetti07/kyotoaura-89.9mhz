@@ -52,11 +52,7 @@ module.exports = {
         topic: "Área exclusiva para tocar as suas músicas ",
       });
 
-      KyotoQueue.kyotoAreaID = area.id;
-      const idkyoto = { kyotoarea: KyotoQueue.kyotoAreaID };
-
-      // writingJson(idkyoto);
-      createStartMessage(interaction, area);
+      createStartMessage(area);
       return await interaction.reply({
         embeds: [
           new EmbedBuilder()
