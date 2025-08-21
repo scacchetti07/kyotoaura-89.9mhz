@@ -10,10 +10,10 @@ const {
 } = require("discord.js");
 const { token, prefix } = require("./config.json");
 const { DisTube } = require("distube");
-const { YouTubePlugin } = require("@distube/youtube");
-const { SoundCloudPlugin } = require("@distube/soundcloud");
 const { SpotifyPlugin } = require("@distube/spotify");
+const { YouTubePlugin } = require("@distube/youtube");
 const { YtDlpPlugin } = require("@distube/yt-dlp");
+const ffmpegs = require("ffmpeg-static");
 
 // Create a new client instance
 const client = new Client({
@@ -27,12 +27,17 @@ const client = new Client({
 
 client.commands = new Collection(); // Collection = Dicitionary (ou map em JS)
 client.distube = new DisTube(client, {
-  emitNewSongOnly: false,
-  emitAddSongWhenCreatingQueue: true,
+  emitNewSongOnly: true,
   plugins: [
-    new YtDlpPlugin({ update: true }),
     new SpotifyPlugin(),
-    new SoundCloudPlugin(),
+    new YouTubePlugin({
+      ytdlOptions: {
+        filter: "audioonly",
+        quality: "highestaudio",
+        highWaterMark: 1 << 25,
+        dlChunkSize: 0,
+      },
+    }),
   ],
 });
 
