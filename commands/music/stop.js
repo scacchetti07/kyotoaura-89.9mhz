@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { checkPresence } = require("../../helpers/checkPresence.js");
+const { errorEmbed } = require("../../helpers/errorEmbedMessage.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -23,13 +24,18 @@ module.exports = {
     // Defer a resposta para evitar timeout
     await interaction.deferReply();
 
-    await distube.stop(interaction.guild.id);
-    return await interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setColor("DarkVividPink")
-          .setDescription("❌ Player encerrado."),
-      ],
-    });
+    try {
+      await distube.stop(interaction.guild.id);
+      return await interaction.editReply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor("DarkVividPink")
+            .setDescription("❌ Player encerrado."),
+        ],
+      });
+    } catch (error) {
+      console.error(error);
+      return errorEmbed(interaction);
+    }
   },
 };

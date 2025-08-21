@@ -4,7 +4,7 @@ const { KyotoAura } = require("./KyotoAura.js");
 class KyotoQueue extends KyotoAura {
   static kyotoAreaID;
   #kyotoQueue;
-  defaultImg = "https://i.imgur.com/ukQH1Bd.jpeg";
+  defaultImg = "https://i.imgur.com/PFSSpXs.jpeg";
 
   getKyotoQueue() {
     return this.#kyotoQueue;
@@ -16,7 +16,7 @@ class KyotoQueue extends KyotoAura {
   constructor(interaction) {
     super(interaction);
     this.setQueue(this.getDistube().getQueue(this.getGuildId()));
-   // console.log(this.#kyotoQueue) // undefined = no queue
+    // console.log(this.#kyotoQueue) // undefined = no queue
   }
 
   queueStatus() {
@@ -32,23 +32,21 @@ class KyotoQueue extends KyotoAura {
     if (!this.#kyotoQueue) {
       return "Fila Vazia";
     }
-    
-    return (
-      `**Na fila**\n${
-        this.#kyotoQueue.songs
-          .slice(1, 10)
-          .map(
-            (song, i) =>
-              `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
-          )
-          .join("\n") || "Fila vazia"
-      }`
-    );
+
+    return `**Na fila**\n${
+      this.#kyotoQueue.songs
+        .slice(1, 10)
+        .map(
+          (song, i) =>
+            `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
+        )
+        .join("\n") || "Fila vazia"
+    }`;
   }
 
   isLooping() {
     if (!this.#kyotoQueue) {
-      return "❌"
+      return "❌";
     }
 
     return `${
@@ -62,7 +60,7 @@ class KyotoQueue extends KyotoAura {
 
   isPaused() {
     if (!this.#kyotoQueue) {
-      return "❌"
+      return "❌";
     }
 
     return `${this.#kyotoQueue.isPaused() ? "✅" : "❌"}`;
@@ -70,7 +68,7 @@ class KyotoQueue extends KyotoAura {
 
   queueCount() {
     if (!this.#kyotoQueue) {
-      return "0"
+      return "0";
     }
 
     return `${this.#kyotoQueue.songs.length - 1}`;
@@ -86,4 +84,4 @@ class KyotoQueue extends KyotoAura {
   }
 }
 
-module.exports = { KyotoQueue }
+module.exports = { KyotoQueue };
