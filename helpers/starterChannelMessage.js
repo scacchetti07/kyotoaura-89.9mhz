@@ -6,6 +6,7 @@ import {
 } from "discord.js";
 import { KyotoQueue } from "../models/KyotoQueue.js";
 import { errorEmbed } from "./errorEmbedMessage.js";
+import { kyotoEmbed } from "./kyotoAreaEmbed.js";
 
 export function createStartMessage(interaction, channel) {
   const playpauseButton = new ButtonBuilder()
@@ -28,7 +29,7 @@ export function createStartMessage(interaction, channel) {
     .setCustomId("loop-button")
     .setStyle(ButtonStyle.Secondary)
     .setLabel("🔁");
-  
+
   const shuffleButton = new ButtonBuilder()
     .setCustomId("shuffle-button")
     .setStyle(ButtonStyle.Secondary)
@@ -39,40 +40,16 @@ export function createStartMessage(interaction, channel) {
     stopButton,
     skipButton,
     loopButton,
-    shuffleButton
+    shuffleButton,
   );
 
   try {
     const kyoto = new KyotoQueue(interaction);
-    const embed = new EmbedBuilder()
-          .setColor("Purple")
-          .setTitle(kyoto.queueStatus())
-          .setDescription(kyoto.queueTemplate())
-          .addFields(
-            {
-              name: "Looping",
-              value: kyoto.isLooping(),
-              inline: true,
-            },
-            {
-              name: "Pausado",
-              value: kyoto.isPaused(),
-              inline: true,
-            },
-            {
-              name: "Total",
-              value: kyoto.queueCount(),
-              inline: true,
-            },
-          )
-          .setImage(kyoto.currentPhotoSong());
-      
-    channel.send({ embeds: [ embed ], components: [ player ]})
-    
+    const embed = kyotoEmbed(kyoto);
+
+    channel.send({ embeds: [embed], components: [player] });
   } catch (error) {
     console.error(error);
     throw new Error(error);
-    
   }
-  
 }
