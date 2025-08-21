@@ -15,10 +15,18 @@ module.exports = {
     ),
   async execute(interaction) {
     const distube = interaction.client.distube;
+    const currQueue = distube.getQueue(interaction);
 
     const errorObj = checkPresence(interaction);
     if (errorObj.error) {
       return errorEmbed(interaction, errorObj.msg);
+    }
+
+    if (currQueue.songs.length <= 1) {
+      return interaction.reply({
+        content: "A fila está vazia no momento",
+        flags: MessageFlags.Ephemeral,
+      });
     }
 
     try {
@@ -35,9 +43,7 @@ module.exports = {
       });
     } catch (error) {
       console.error(error);
-      interaction.reply({
-        embeds: [errorEmbed("Não foi possível pular a música atual.")],
-      });
+      errorEmbed("Não foi possível pular a música atual.");
     }
   },
 };

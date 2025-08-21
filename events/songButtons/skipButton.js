@@ -6,7 +6,7 @@ const { errorFollowUp } = require("../../helpers/errorFolowUp.js");
 module.exports = {
   name: Events.InteractionCreate,
   async execute(interaction) {
-    const myId = "playpause-button";
+    const myId = "skip-button";
     if (!interaction.isButton() || interaction.customId !== myId) return;
 
     const distube = interaction.client.distube;
@@ -27,18 +27,23 @@ module.exports = {
       });
     }
 
+    if (currQueue.songs.length <= 1) {
+      return interaction.reply({
+        content: "Não há músicas na fila a seguir",
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+
     try {
-      if (!currQueue.isPaused()) {
-        console.log("Pausando");
-        await distube.pause(interaction);
-        return;
-      }
-      console.log("voltando");
-      await distube.resume(interaction);
-      return;
+      await distube.skip(interaction);
+      console.log("Pulou a música");
+      // Modificar tela principal
     } catch (error) {
       console.error(error);
-      errorEmbed(interaction);
+      return interaction.reply({
+        content: error,
+        flags: MessageFlags.Ephemeral,
+      });
     }
   },
 };

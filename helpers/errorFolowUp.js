@@ -4,7 +4,8 @@ async function errorFollowUp(
   interaction,
   msg = "Ocorreu um erro durante a execução do comando.",
 ) {
-  return interaction.followUp({
+  await interaction.deferReply();
+  return interaction.reply({
     content: msg,
     flags: MessageFlags.Ephemeral,
   });

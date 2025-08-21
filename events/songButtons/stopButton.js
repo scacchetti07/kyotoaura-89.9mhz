@@ -13,11 +13,17 @@ module.exports = {
     const errorObj = checkPresence(interaction);
 
     if (errorObj.error) {
-      return errorEmbed(interaction, errorObj.msg);
+      return interaction.reply({
+        content: errorObj.msg,
+        flags: MessageFlags.Ephemeral,
+      });
     }
 
     if (currQueue.songs.length == 0)
-      return errorEmbed(interaction, "A fila se encontra vazia no momento");
+      return interaction.reply({
+        content: "A fila está vazia",
+        flags: MessageFlags.Ephemeral,
+      });
 
     // await interaction.deferReply();
 
@@ -27,7 +33,7 @@ module.exports = {
       // Reiniciar Embed inicial.
     } catch (error) {
       console.error(error);
-      interaction.followUp({
+      interaction.reply({
         content: "Não foi possível realizar o comando, tente novamente",
         flags: MessageFlags.Ephemeral,
       });
