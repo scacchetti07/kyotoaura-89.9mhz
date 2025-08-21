@@ -31,7 +31,6 @@ module.exports = {
 
     let status = "";
     let embed;
-    //   await interaction.deferReply();
     try {
       switch (subcommands) {
         case "musica":
