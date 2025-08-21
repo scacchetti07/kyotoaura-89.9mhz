@@ -13,6 +13,7 @@ const { DisTube } = require("distube");
 const { YouTubePlugin } = require("@distube/youtube");
 const { SoundCloudPlugin } = require("@distube/soundcloud");
 const { SpotifyPlugin } = require("@distube/spotify");
+const { YtDlpPlugin } = require("@distube/yt-dlp");
 
 // Create a new client instance
 const client = new Client({
@@ -28,7 +29,11 @@ client.commands = new Collection(); // Collection = Dicitionary (ou map em JS)
 client.distube = new DisTube(client, {
   emitNewSongOnly: false,
   emitAddSongWhenCreatingQueue: true,
-  plugins: [new YouTubePlugin(), new SoundCloudPlugin(), new SpotifyPlugin()],
+  plugins: [
+    new YtDlpPlugin({ update: true }),
+    new SpotifyPlugin(),
+    new SoundCloudPlugin(),
+  ],
 });
 
 const foldersPath = path.join(__dirname, "commands");
