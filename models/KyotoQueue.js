@@ -1,87 +1,65 @@
-const { KyotoAura } = require("./KyotoAura.js");
-// const { kyotoArea } = require("../config.json")
+class KyotoQueue {
+  static msgId
+  static kyotoChatId
+  song
+  queue
 
-class KyotoQueue extends KyotoAura {
-  static kyotoAreaID;
-  #kyotoQueue;
-  defaultImg = "https://i.imgur.com/PFSSpXs.jpeg";
-
-  getKyotoQueue() {
-    return this.#kyotoQueue;
-  }
-  async setQueue(value) {
-    this.#kyotoQueue = await value;
+  constructor(queue, song) {
+    this.song = song;
+    this.queue = queue;
   }
 
-  constructor(interaction) {
-    super(interaction);
-    this.setQueue(this.getDistube().getQueue(this.getGuildId()));
-    // console.log(this.#kyotoQueue) // undefined = no queue
+  queueTemplate(queue) {
+  if (!queue) {
+    return "Fila Vazia";
   }
 
-  queueStatus() {
-    if (!this.#kyotoQueue) {
-      return "Nenhuma música no ar!";
-    }
+  return `**Na fila**\n${
+    queue.songs
+      .slice(1, 10)
+      .map(
+        (song, i) =>
+          `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
+      )
+      .join("\n") || "Fila vazia"
+  }`;
+}
 
-    const song = this.#kyotoQueue.songs[0];
-    return `**Tocando agora:** \n[${song.name}](${song.url})**`;
+queueStatus(song) {
+  if (song) return `${song.name}`;
+  return "Nenhuma música no ar!";
+}
+
+queueCount(queue) {
+  if (queue) return queue.songs.length;
+  return "0";
+}
+
+loopingStatus(queue) {
+  if (!queue) {
+    return "Desligado";
   }
 
-  queueTemplate() {
-    if (!this.#kyotoQueue) {
-      return "Fila Vazia";
-    }
+  return queue.repeatMode === RepeatMode.QUEUE
+    ? "Fila"
+    : queue.repeatMode === RepeatMode.SONG
+      ? "Música"
+      : "Desligado";
+}
 
-    return `**Na fila**\n${
-      this.#kyotoQueue.songs
-        .slice(1, 10)
-        .map(
-          (song, i) =>
-            `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
-        )
-        .join("\n") || "Fila vazia"
-    }`;
+isPaused(queue) {
+  if (!queue) {
+    return "Não";
   }
+  return queue.isPaused() ? "Sim" : "Não";
+}
 
-  isLooping() {
-    if (!this.#kyotoQueue) {
-      return "❌";
-    }
-
-    return `${
-      this.#kyotoQueue.repeatMode === RepeatMode.QUEUE
-        ? "Fila"
-        : this.#kyotoQueue.repeatMode === RepeatMode.SONG
-          ? "Música"
-          : "Desligado"
-    }`;
+songPicture(song) {
+  if (!song) {
+    return "https://i.imgur.com/PFSSpXs.jpeg";
   }
-
-  isPaused() {
-    if (!this.#kyotoQueue) {
-      return "❌";
-    }
-
-    return `${this.#kyotoQueue.isPaused() ? "✅" : "❌"}`;
-  }
-
-  queueCount() {
-    if (!this.#kyotoQueue) {
-      return "0";
-    }
-
-    return `${this.#kyotoQueue.songs.length - 1}`;
-  }
-
-  currentPhotoSong() {
-    if (this.#kyotoQueue === undefined) {
-      return this.defaultImg;
-    }
-    const song = this.#kyotoQueue.songs[0];
-
-    return song.thumbnail;
-  }
+  return song.thumbnail;
+}
 }
 
 module.exports = { KyotoQueue };

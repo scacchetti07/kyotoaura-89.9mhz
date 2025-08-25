@@ -1,29 +1,31 @@
 const { EmbedBuilder } = require("discord.js");
 const { RepeatMode } = require("distube");
+const { KyotoQueue } = require("../models/KyotoQueue")
 
 function kyotoEmbed(queue = undefined, song = undefined) {
+  const kyoto = new KyotoQueue(queue, song)
   return new EmbedBuilder()
     .setColor("Purple")
-    .setTitle(queueStatus(song))
-    .setDescription(queueTemplate(queue))
+    .setTitle(kyoto.queueStatus(song))
+    .setDescription(kyoto.queueTemplate(queue))
     .addFields(
       {
         name: "Looping",
-        value: `${loopingStatus()}`,
+        value: `${kyoto.loopingStatus()}`,
         inline: true,
       },
       {
         name: "Pausado",
-        value: `${isPaused(queue)}`,
+        value: `${kyoto.isPaused(queue)}`,
         inline: true,
       },
       {
         name: "Total",
-        value: `${queueCount(queue)}`,
+        value: `${kyoto.queueCount(queue)}`,
         inline: true,
       },
     )
-    .setImage(songPicture(song));
+    .setImage(kyoto.songPicture(song));
 }
 
 function queueTemplate(queue) {

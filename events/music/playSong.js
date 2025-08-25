@@ -29,7 +29,7 @@ module.exports = {
         .setTimestamp();
     } else {
       embed = kyotoEmbed(queue, song);
-      queue.textChannel.messages.fetch().then((msg) => msg.delete());
+      queue.textChannel.messages.edit(KyotoQueue.msgId)
     }
     queue.textChannel
       .send({ embeds: [embed], components: [playerButtons()] })
