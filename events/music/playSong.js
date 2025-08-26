@@ -7,9 +7,6 @@ module.exports = {
   name: "playSong",
   async execute(queue, song) {
     let embed;
-
-    // Setting the Message Bot in Area
-    queue.textChannel.messages.fetch({limit: 1}).then(msg => KyotoQueue.setMessageId(msg.firstKey()))
     if (queue.textChannel.name !== "🎸-kyoto-songs") {
       embed = new EmbedBuilder()
         .setColor("Blue")
@@ -30,12 +27,21 @@ module.exports = {
         )
         .setThumbnail(song.thumbnail)
         .setTimestamp();
+        
+        await queue.textChannel
+          .send({ embeds: [embed] })
+          .catch(console.error);
     } else {
+      // Setting the Message Bot in Area
+      await queue.textChannel.messages.fetch({limit: 1}).then(msg => KyotoQueue.setMessageId(msg.first().id))
       embed = kyotoEmbed(queue, song);
-     // queue.textChannel.messages.edit(KyotoQueue.msgId)
+
+      try {
+        const message = await queue.textChannel.messages.fetch(KyotoQueue.msgId);
+        await message.edit({ embeds: [embed], components: [playerButtons()] });
+      } catch (err) {
+        console.error("Erro ao editar mensagem fixa:", err);
+      }
     }
-    queue.textChannel
-      .send({ embeds: [embed], components: [playerButtons()] })
-      .catch(console.error);
   },
 };

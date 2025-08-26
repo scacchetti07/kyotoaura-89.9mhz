@@ -28,46 +28,45 @@ class KyotoQueue {
   }`;
 }
 
-queueStatus() {
-  if (this.song) return `${this.song.name}`;
-  return "Nenhuma música no ar!";
-}
-
-queueCount() {
-  if (this.queue) return this.queue.songs.length;
-  return "0";
-}
-
-loopingStatus() {
-  if (!this.queue) {
-    return "Desligado";
+  queueStatus() {
+    if (this.song) return `${this.song.name}`;
+    return "Nenhuma música no ar!";
   }
 
-  return this.queue.repeatMode === RepeatMode.QUEUE
-    ? "Fila"
-    : this.queue.repeatMode === RepeatMode.SONG
-      ? "Música"
-      : "Desligado";
-}
-
-isPaused() {
-  if (!this.queue) {
-    return "Não";
+  queueCount() {
+    if (this.queue) return this.queue.songs.length;
+    return "0";
   }
-  return this.queue.isPaused() ? "Sim" : "Não";
-}
 
-songPicture() {
-  if (!this.song) {
-    return "https://i.imgur.com/PFSSpXs.jpeg";
+  loopingStatus() {
+    if (!this.queue) {
+      return "Desligado";
+    }
+
+    return this.queue.repeatMode === RepeatMode.QUEUE
+      ? "Fila"
+      : this.queue.repeatMode === RepeatMode.SONG
+        ? "Música"
+        : "Desligado";
   }
-  return this.song.thumbnail;
-}
 
-static setMessageId(id) {
-  KyotoQueue.msgId = id;
-  console.log(KyotoQueue.msgId)
-}
+  isPaused() {
+    if (!this.queue) {
+      return "Não";
+    }
+    return this.queue.isPaused() ? "Sim" : "Não";
+  }
+
+  songPicture() {
+    if (!this.song) {
+      return "https://i.imgur.com/PFSSpXs.jpeg";
+    }
+    return this.song.thumbnail;
+  }
+
+  static setMessageId(id) {
+    KyotoQueue.msgId = id;
+  }
 
 }
 
