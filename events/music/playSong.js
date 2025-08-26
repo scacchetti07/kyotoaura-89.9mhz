@@ -7,6 +7,9 @@ module.exports = {
   name: "playSong",
   async execute(queue, song) {
     let embed;
+
+    // Setting the Message Bot in Area
+    queue.textChannel.messages.fetch({limit: 1}).then(msg => KyotoQueue.setMessageId(msg.firstKey()))
     if (queue.textChannel.name !== "🎸-kyoto-songs") {
       embed = new EmbedBuilder()
         .setColor("Blue")
@@ -29,7 +32,7 @@ module.exports = {
         .setTimestamp();
     } else {
       embed = kyotoEmbed(queue, song);
-      queue.textChannel.messages.edit(KyotoQueue.msgId)
+     // queue.textChannel.messages.edit(KyotoQueue.msgId)
     }
     queue.textChannel
       .send({ embeds: [embed], components: [playerButtons()] })

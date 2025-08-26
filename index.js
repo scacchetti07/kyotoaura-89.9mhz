@@ -12,8 +12,6 @@ const { token, prefix } = require("./config.json");
 const { DisTube } = require("distube");
 const { SpotifyPlugin } = require("@distube/spotify");
 const { YouTubePlugin } = require("@distube/youtube");
-const { YtDlpPlugin } = require("@distube/yt-dlp");
-const ffmpegs = require("ffmpeg-static");
 
 // Create a new client instance
 const client = new Client({

@@ -1,3 +1,6 @@
+const { RepeatMode } = require("distube");
+const { clientId } = require("../config.json");
+
 class KyotoQueue {
   static msgId
   static kyotoChatId
@@ -9,57 +12,63 @@ class KyotoQueue {
     this.queue = queue;
   }
 
-  queueTemplate(queue) {
-  if (!queue) {
+  queueTemplate() {
+  if (!this.queue) {
     return "Fila Vazia";
   }
 
   return `**Na fila**\n${
-    queue.songs
+    this.queue.songs
       .slice(1, 10)
       .map(
         (song, i) =>
-          `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
+          `**${i + 1}.** \`${song.formattedDuration}\` [${song.name}](${this.song.url}) • <@${song.user?.id ?? "Desconhecido"}>`,
       )
       .join("\n") || "Fila vazia"
   }`;
 }
 
-queueStatus(song) {
-  if (song) return `${song.name}`;
+queueStatus() {
+  if (this.song) return `${this.song.name}`;
   return "Nenhuma música no ar!";
 }
 
-queueCount(queue) {
-  if (queue) return queue.songs.length;
+queueCount() {
+  if (this.queue) return this.queue.songs.length;
   return "0";
 }
 
-loopingStatus(queue) {
-  if (!queue) {
+loopingStatus() {
+  if (!this.queue) {
     return "Desligado";
   }
 
-  return queue.repeatMode === RepeatMode.QUEUE
+  return this.queue.repeatMode === RepeatMode.QUEUE
     ? "Fila"
-    : queue.repeatMode === RepeatMode.SONG
+    : this.queue.repeatMode === RepeatMode.SONG
       ? "Música"
       : "Desligado";
 }
 
-isPaused(queue) {
-  if (!queue) {
+isPaused() {
+  if (!this.queue) {
     return "Não";
   }
-  return queue.isPaused() ? "Sim" : "Não";
+  return this.queue.isPaused() ? "Sim" : "Não";
 }
 
-songPicture(song) {
-  if (!song) {
+songPicture() {
+  if (!this.song) {
     return "https://i.imgur.com/PFSSpXs.jpeg";
   }
-  return song.thumbnail;
+  return this.song.thumbnail;
 }
+
+static setMessageId(id) {
+  KyotoQueue.msgId = id;
+  console.log(KyotoQueue.msgId)
+}
+
 }
 
 module.exports = { KyotoQueue };
