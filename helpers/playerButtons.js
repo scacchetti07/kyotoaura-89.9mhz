@@ -1,6 +1,6 @@
-import { ButtonBuilder, ActionRowBuilder, ButtonStyle } from "discord.js";
+const { ButtonBuilder, ActionRowBuilder, ButtonStyle } = require ("discord.js");
 
-export function playerButtons() {
+function playerButtons() {
   const playpauseButton = new ButtonBuilder()
     .setCustomId("playpause-button")
     .setStyle(ButtonStyle.Secondary)
@@ -37,3 +37,5 @@ export function playerButtons() {
 
   return player;
 }
+
+module.exports = { playerButtons }
